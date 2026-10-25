@@ -1,140 +1,142 @@
-# dork-pro — Documentación del proyecto
+# dork-pro — Project documentation
 
-## 1. Qué es
+> 🇪🇸 Esta documentación también está disponible en español: [README-es.md](README-es.md).
 
-**dork-pro** es una aplicación web que ayuda a construir **Google dorks** (consultas con operadores avanzados como `site:`, `inurl:`, `intitle:`, `filetype:`) para **reconocimiento autorizado**: pentesting, bug bounty y auditorías de seguridad. El usuario navega por bibliotecas de dorks, rellena el dominio objetivo y obtiene la consulta lista para lanzar en distintos buscadores.
+## 1. What it is
 
-Incluye un **asistente de IA** que genera dorks a partir de una descripción en lenguaje natural, usando Gemini, Claude, OpenAI o una API compatible con OpenAI (incluida una IA local).
+**dork-pro** is a web application that helps you build **Google dorks** (queries that use advanced operators such as `site:`, `inurl:`, `intitle:`, `filetype:`) for **authorized reconnaissance**: penetration testing, bug bounty and security audits. Users browse dork libraries, fill in the target domain and get a query ready to run on several search engines.
 
-> ⚠️ Estas consultas solo exponen contenido que los buscadores ya tienen indexado. Úsalas **únicamente** sobre dominios de tu propiedad o con autorización escrita.
+It includes an **AI assistant** that generates dorks from a natural-language description, using Gemini, Claude, OpenAI or any OpenAI-compatible API (including a local AI).
+
+> ⚠️ These queries only expose content that search engines have already indexed. Use them **only** against domains you own or have written authorization to test.
 
 ### Stack
 
-| Capa | Tecnología |
+| Layer | Technology |
 |---|---|
-| Interfaz | React 19 |
-| Build y servidor de desarrollo | Vite 6 |
-| Estilos | Tailwind CSS v4 (plugin oficial `@tailwindcss/vite`) |
-| Runtime de desarrollo | Node.js 24 (`.nvmrc`, `engines`) |
+| Interface | React 19 |
+| Build and dev server | Vite 6 |
+| Styles | Tailwind CSS v4 (official `@tailwindcss/vite` plugin) |
+| Development runtime | Node.js 24 (`.nvmrc`, `engines`) |
 
-## 2. Contenido del proyecto
+## 2. Project contents
 
-| Ruta | Descripción |
+| Path | Description |
 |---|---|
-| `index.html` | Punto de entrada de Vite. Contiene `<div id="root">` y carga `src/main.jsx`. |
-| `src/main.jsx` | Monta la aplicación React en modo `StrictMode` y carga los estilos. |
-| `src/App.jsx` | Estado global (biblioteca activa, dork seleccionado, filtros, idioma, tema, dominio) y composición de paneles. |
-| `src/index.css` | Tailwind v4 y tokens de color para tema claro y oscuro. |
-| `src/components/` | Componentes de interfaz: `Topbar`, `LibrarySidebar`, `DorkList`, `DetailPanel`, `HomeHero`, `AiChat`, `LegalFoot`, `Icons`. |
-| `src/data/catalog.js` | Datos: `CATS` (15 bibliotecas), `DORKS` (100 dorks), `ENGINES` (8 buscadores) y `AI_PROVIDERS`. |
-| `src/data/translations.js` | Diccionario español → inglés y la función `makeTr(lang)`. |
-| `src/lib/` | Lógica sin interfaz: `query.js` (construcción de la consulta), `ai.js` (llamadas a proveedores de IA), `hooks.js` (estado persistido, toast, copiar). |
-| `public/` | Archivos estáticos servidos tal cual en la raíz del sitio. |
-| `vite.config.js` | Configuración de Vite: plugins de React y Tailwind. |
-| `vercel.json` | Configuración de despliegue en Vercel: build, carpeta de salida, reescrituras y cabeceras de seguridad. |
-| `Dockerfile`, `nginx.conf`, `.dockerignore` | Imagen de contenedor: build con Node 24 y servidor estático con nginx. |
-| `.nvmrc` | Versión de Node usada por el proyecto (`24`). |
-| `.env.example` | Variables de entorno opcionales (ver sección 3). |
-| `docs/` | Documentación técnica y guías de despliegue. Índice en [docs/README.md](docs/README.md). |
+| `index.html` | Vite entry point. Contains `<div id="root">` and loads `src/main.jsx`. |
+| `src/main.jsx` | Mounts the React application in `StrictMode` and loads the styles. |
+| `src/App.jsx` | Global state (active library, selected dork, filters, language, theme, domain) and panel composition. |
+| `src/index.css` | Tailwind v4 and color tokens for light and dark themes. |
+| `src/components/` | UI components: `Topbar`, `LibrarySidebar`, `DorkList`, `DetailPanel`, `HomeHero`, `AiChat`, `LegalFoot`, `Icons`. |
+| `src/data/catalog.js` | Data: `CATS` (15 libraries), `DORKS` (100 dorks), `ENGINES` (8 search engines) and `AI_PROVIDERS`. |
+| `src/data/translations.js` | Spanish → English dictionary and the `makeTr(lang)` function. |
+| `src/lib/` | Logic without UI: `query.js` (query building), `ai.js` (calls to AI providers), `hooks.js` (persisted state, toast, copy). |
+| `public/` | Static files served as-is at the site root. |
+| `vite.config.js` | Vite configuration: React and Tailwind plugins. |
+| `vercel.json` | Vercel deployment configuration: build, output folder, rewrites and security headers. |
+| `Dockerfile`, `nginx.conf`, `.dockerignore` | Container image: build with Node 24 and static serving with nginx. |
+| `.nvmrc` | Node version used by the project (`24`). |
+| `.env.example` | Optional environment variables (see section 3). |
+| `docs/` | Technical documentation and deployment guides. Index at [docs/README.md](docs/README.md). |
 
-## 3. Requisitos y ejecución
+## 3. Requirements and running
 
-Requiere **Node.js 24**. Con nvm:
+Requires **Node.js 24**. With nvm:
 
 ```bash
 nvm install 24
-nvm use            # lee .nvmrc
-npm ci             # instala las dependencias exactas de package-lock.json
-npm run dev        # servidor de desarrollo (http://localhost:5173)
-npm run build      # build de producción en dist/
-npm run preview    # sirve el build localmente
+nvm use            # reads .nvmrc
+npm ci             # installs the exact dependencies from package-lock.json
+npm run dev        # development server (http://localhost:5173)
+npm run build      # production build in dist/
+npm run preview    # serves the build locally
 ```
 
-Variables de entorno opcionales (copia `.env.example` a `.env`):
+Optional environment variables (copy `.env.example` to `.env`):
 
-| Variable | Valores | Efecto |
+| Variable | Values | Effect |
 |---|---|---|
-| `VITE_DEFAULT_LANG` | `en` (por defecto) o `es` | Idioma inicial. El usuario puede cambiarlo y la elección se guarda en su navegador. |
+| `VITE_DEFAULT_LANG` | `en` (default) or `es` | Initial language. Users can change it and the choice is saved in their browser. |
 
-> No hay ninguna variable con secretos: la aplicación es 100% estática.
+> There are no secret variables: the application is 100% static.
 
-### Uso
+### Usage
 
-1. **Elige una biblioteca** en la barra lateral (por ejemplo, documentos expuestos, paneles de login o repositorios).
-2. **Elige un dork** de la lista. Puedes filtrar por severidad (riesgo alto, medio o informativo).
-3. **Indica el dominio objetivo** y el alcance: `site:` (solo ese dominio) o `web` (sin restricción).
-4. **Abre la consulta** en el buscador que prefieras, o copia la consulta generada.
+1. **Pick a library** in the sidebar (for example, exposed documents, login panels or repositories).
+2. **Pick a dork** from the list. You can filter by severity (high, medium or informational).
+3. **Enter the target domain** and the scope: `site:` (that domain only) or `web` (no restriction).
+4. **Open the query** in your preferred search engine, or copy the generated query.
 
-### Inicio
+### Home
 
-Sin biblioteca seleccionada, la pantalla de inicio muestra el asistente de IA y un resumen para empezar.
+When no library is selected, the home screen shows the AI assistant and a short summary to get started.
 
-## 4. Funcionalidades
+## 4. Features
 
-### 4.1 Constructor de dorks
-- Tres paneles estilo CLI Builder: bibliotecas → dorks → vista previa de la consulta.
-- Buscador global que cruza título, consulta, nota y biblioteca, en el idioma activo.
-- Filtro por severidad y filtro por biblioteca.
-- Sustitución automática del marcador `{dom}` por el dominio objetivo.
-- Copia al portapapeles con notificación breve (*toast*).
+### 4.1 Dork builder
+- Three panels in CLI Builder style: libraries → dorks → query preview.
+- Global search that matches title, query, note and library, in the active language.
+- Filter by severity and filter by library.
+- Automatic replacement of the `{dom}` placeholder with the target domain.
+- Copy to clipboard with a brief notification (*toast*).
 
-### 4.2 Búsqueda en buscadores
-Apertura directa de la consulta en 8 buscadores: Google, Bing, DuckDuckGo, Brave, Startpage, Yahoo, Ecosia y Yandex.
+### 4.2 Opening search engines
+Open the query directly in 8 search engines: Google, Bing, DuckDuckGo, Brave, Startpage, Yahoo, Ecosia and Yandex.
 
-### 4.3 Idioma y tema
-- **Multilenguaje ES/EN**. El español es el idioma base; las claves del diccionario son el texto en español.
-- **Tema claro y oscuro**. Sin preferencia guardada se sigue la preferencia del sistema (`prefers-color-scheme`).
-- Ambas preferencias se guardan en `localStorage` (claves `dork-lang` y `dork-theme`).
+### 4.3 Language and theme
+- **ES/EN multilingual support**. Spanish is the base language; the dictionary keys are the Spanish text.
+- **Light and dark theme**. Without a saved preference, the system preference (`prefers-color-scheme`) is followed.
+- Both preferences are saved in `localStorage` (keys `dork-lang` and `dork-theme`).
 
-### 4.4 Asistente de IA
-Genera de 1 a 5 dorks a partir de una necesidad descrita por el usuario, con una explicación de una línea para cada uno.
+### 4.4 AI assistant
+Generates 1 to 5 dorks from a need described by the user, with a one-line explanation for each.
 
-| Proveedor | Modelo por defecto | Notas |
+| Provider | Default model | Notes |
 |---|---|---|
-| Gemini (Google) | `gemini-2.0-flash` | Funciona directamente desde el navegador. |
-| Claude (Anthropic) | `claude-3-5-haiku-latest` | Envía la cabecera `anthropic-dangerous-direct-browser-access`. |
-| OpenAI | `gpt-4o-mini` | Normalmente permite llamadas directas desde el navegador. |
-| Personalizada / IA local | — | Cualquier API compatible con OpenAI, por ejemplo Ollama (`http://localhost:11434/v1`). |
+| Gemini (Google) | `gemini-2.0-flash` | Works directly from the browser. |
+| Claude (Anthropic) | `claude-3-5-haiku-latest` | Sends the `anthropic-dangerous-direct-browser-access` header. |
+| OpenAI | `gpt-4o-mini` | Usually allows direct calls from the browser. |
+| Custom / local AI | — | Any OpenAI-compatible API, for example Ollama (`http://localhost:11434/v1`). |
 
-Configuración en el propio asistente: proveedor, clave (opcional para la IA local), modelo y URL base. Todo se guarda en `localStorage` con las claves `dork-ai-provider`, `dork-ai-keys`, `dork-ai-models` y `dork-ai-bases`.
+Configuration is done in the assistant itself: provider, key (optional for local AI), model and base URL. Everything is saved in `localStorage` under the keys `dork-ai-provider`, `dork-ai-keys`, `dork-ai-models` and `dork-ai-bases`.
 
-## 5. Arquitectura técnica
+## 5. Technical architecture
 
-La arquitectura, el flujo de datos y las decisiones de diseño están en [docs/architecture.md](docs/architecture.md).
+The architecture, data flow and design decisions are described in [docs/architecture.md](docs/architecture.md).
 
-Resumen:
-- **Sin backend propio.** Todo el código se ejecuta en el navegador; el servidor solo entrega archivos estáticos.
-- **Las llamadas a la IA salen directamente del navegador** hacia la API del proveedor, sin proxy intermedio.
-- **La aplicación no ejecuta búsquedas por sí misma**: genera las consultas y abre los buscadores.
+Summary:
+- **No backend of its own.** All code runs in the browser; the server only delivers static files.
+- **AI calls go directly from the browser** to the provider's API, with no intermediate proxy.
+- **The application does not run searches itself**: it generates the queries and opens the search engines.
 
-## 6. Seguridad y privacidad
+## 6. Security and privacy
 
-- Las claves de API se guardan **en texto plano** en el `localStorage` del navegador. Cualquier script que se ejecute en el mismo origen puede leerlas. No configures claves de proveedores como variables de entorno de Vercel: quedarían en el bundle público.
-- Las claves **nunca** se envían a un servidor propio del proyecto; solo viajan en la petición al proveedor elegido.
-- La aplicación usa cabeceras de seguridad en `vercel.json` (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy` y `Permissions-Policy`).
-- El asistente tiene instrucciones para no generar exploits ni contenido ilegal, pero es un filtro de comportamiento del modelo, no una garantía.
+- API keys are stored **in plain text** in the browser's `localStorage`. Any script running on the same origin can read them. Do not configure provider keys as Vercel environment variables: they would end up in the public bundle.
+- Keys are **never** sent to a server operated by the project; they only travel in the request to the chosen provider.
+- The application uses security headers defined in `vercel.json` (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy` and `Permissions-Policy`).
+- The assistant is instructed not to generate exploits or illegal content, but this is a behavioral filter of the model, not a guarantee.
 
-## 7. Limitaciones conocidas
+## 7. Known limitations
 
-- Los dorks son una lista estática en `src/data/catalog.js`; no se actualizan solos.
-- Un proveedor de IA puede bloquear la llamada por CORS. En ese caso el error aparece en el chat y haría falta un proxy propio.
-- Una IA local servida por HTTPS puede quedar bloqueada por *mixed content*. En desarrollo (`http://localhost`) funciona.
-- Las consultas dependen de que el buscador siga soportando los operadores usados.
+- Dorks are a static list in `src/data/catalog.js`; they do not update automatically.
+- An AI provider may block the call due to CORS. In that case the error appears in the chat and a custom proxy would be required.
+- A local AI served over HTTPS may be blocked by *mixed content*. In development (`http://localhost`) it works.
+- Queries depend on search engines continuing to support the operators used.
 
-## 8. Posibles mejoras
+## 8. Possible improvements
 
-- Pruebas automatizadas (por ejemplo, Vitest para `src/lib/query.js` y `src/lib/ai.js`).
-- Proxy opcional para proveedores con CORS restrictivo.
-- Exportar e importar bibliotecas de dorks en JSON.
-- Separar `catalog.js` en un archivo por biblioteca si el catálogo crece mucho.
+- Automated tests (for example, Vitest for `src/lib/query.js` and `src/lib/ai.js`).
+- Optional proxy for providers with restrictive CORS.
+- Export and import of dork libraries as JSON.
+- Split `catalog.js` into one file per library if the catalog grows significantly.
 
-## 9. Documentación
+## 9. Documentation
 
-| Documento | Contenido |
+| Document | Contents |
 |---|---|
-| [docs/README.md](docs/README.md) | Índice de la documentación y resumen de despliegues. |
-| [docs/architecture.md](docs/architecture.md) | Estructura del código, flujo de datos, estado y asistente de IA. |
-| [docs/deployment-vercel.md](docs/deployment-vercel.md) | Publicación en Vercel (dashboard, integración con Git, dominios). |
-| [docs/deployment-vercel-cli.md](docs/deployment-vercel-cli.md) | Despliegue desde la terminal con la CLI de Vercel. |
-| [docs/deployment-docker-local.md](docs/deployment-docker-local.md) | Construcción y ejecución de la imagen Docker en tu equipo. |
-| [docs/deployment-aws-ec2-docker.md](docs/deployment-aws-ec2-docker.md) | Despliegue en una instancia EC2 con Docker. |
+| [docs/README.md](docs/README.md) | Documentation index and deployment overview. |
+| [docs/architecture.md](docs/architecture.md) | Code structure, data flow, state and AI assistant. |
+| [docs/deployment-vercel.md](docs/deployment-vercel.md) | Publishing on Vercel (dashboard, Git integration, domains). |
+| [docs/deployment-vercel-cli.md](docs/deployment-vercel-cli.md) | Deploying from the terminal with the Vercel CLI. |
+| [docs/deployment-docker-local.md](docs/deployment-docker-local.md) | Building and running the Docker image on your machine. |
+| [docs/deployment-aws-ec2-docker.md](docs/deployment-aws-ec2-docker.md) | Deploying to an EC2 instance with Docker. |
